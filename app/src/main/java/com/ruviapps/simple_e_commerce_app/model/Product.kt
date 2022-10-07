@@ -13,5 +13,6 @@ data class Product(
     val rating : Float,
     val stock : Int,
     val brand : String,
-    val category : String?
+    val category: String?,
+    val thumbnail : String?
 ) : Parcelable

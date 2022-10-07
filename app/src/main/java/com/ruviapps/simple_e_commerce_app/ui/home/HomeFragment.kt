@@ -1,6 +1,7 @@
 package com.ruviapps.simple_e_commerce_app.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -46,16 +47,22 @@ class HomeFragment : Fragment() {
             }
 
         })
+       /* val list = createProductListFromJson(requireContext())
+        adapter.submitList(list)
+*/
         val recyclerView = binding.recyclerView
-        homeViewModel.products.observe(viewLifecycleOwner){
+
+    homeViewModel.products.observe(viewLifecycleOwner){
+            Log.d("myTag","List of Products is $it")
             adapter.submitList(it)
             recyclerView.adapter = adapter
         }
+
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
         binding.recyclerView.adapter = null
+        _binding = null
     }
 }

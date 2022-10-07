@@ -4,7 +4,10 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Simple_e_commerce_app/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="..\:/Simple_e_commerce_app/app/src/main/res/layout/fragment_dashboard.xml" value="0.1" />
         <entry key="..\:/Simple_e_commerce_app/app/src/main/res/layout/fragment_home.xml" value="0.1" />
+        <entry key="..\:/Simple_e_commerce_app/app/src/main/res/layout/fragment_notifications.xml" value="0.1" />
+        <entry key="..\:/Simple_e_commerce_app/app/src/main/res/layout/single_product_layout.xml" value="0.1407766990291262" />
       </map>
     </option>
   </component>
