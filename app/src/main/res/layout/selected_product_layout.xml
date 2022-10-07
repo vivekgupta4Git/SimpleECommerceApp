@@ -59,7 +59,7 @@
                     android:textAppearance="@style/TextAppearance.Material3.HeadlineLarge"
                     android:id="@+id/productPriceTv"
                     android:layout_margin="8dp"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/productImageView"
                     app:layout_constraintEnd_toEndOf="parent"
                     tools:text="Price "
                     app:layout_constraintTop_toBottomOf="@id/ratingBar"

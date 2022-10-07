@@ -80,7 +80,7 @@
                 <com.google.android.material.button.MaterialButton
                     android:layout_margin="8dp"
                     android:id="@+id/buyButton"
-                    android:text="Buy"
+                    android:text="@string/add_to_cart"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/productPriceTv"
                     android:layout_width="wrap_content"
@@ -97,7 +97,10 @@
                     android:layout_height="wrap_content"/>
 
                 <androidx.appcompat.widget.AppCompatEditText
+                    android:enabled="false"
                     android:id="@+id/quantityEditTv"
+                    android:inputType="number"
+                    android:textAlignment="center"
                     app:layout_constraintTop_toTopOf="@id/buyButton"
                     app:layout_constraintBottom_toBottomOf="@id/buyButton"
                     app:layout_constraintEnd_toStartOf="@id/addButton"
@@ -117,7 +120,7 @@
 
                     <androidx.constraintlayout.widget.Group
                         tools:visibility="visible"
-                        android:visibility="gone"
+                        android:visibility="visible"
                         android:id="@+id/grouper"
                         app:constraint_referenced_ids="addButton,removeButton,quantityEditTv"
                         android:layout_width="wrap_content"

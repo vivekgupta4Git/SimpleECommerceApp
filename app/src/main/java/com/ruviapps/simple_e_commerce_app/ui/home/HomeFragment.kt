@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import com.ruviapps.simple_e_commerce_app.R
 import com.ruviapps.simple_e_commerce_app.databinding.FragmentHomeBinding
 import com.ruviapps.simple_e_commerce_app.model.Product
+import com.ruviapps.simple_e_commerce_app.model.SelectedProduct
 
 class HomeFragment : Fragment() {
 
@@ -34,12 +35,13 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
         binding.textHome.setOnClickListener {
             findNavController().navigate(R.id.action_navigation_home_to_navigation_notifications)
         }
         val adapter = ProductsAdapter(object : ProductsAdapter.OnClickListener{
-            override fun onProductClick(pr: Product) {
-                homeViewModel.addProductToCart(pr)
+            override fun onProductClick(pr: Product, qytToAdd : Int) {
+                homeViewModel.addProductToCart(pr,qytToAdd)
                 Toast.makeText(requireContext(),"Product Added to the cart",Toast.LENGTH_SHORT).show()
             }
 

@@ -8,7 +8,8 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
 
 
-private const val BASE_URL ="https://mocki.io"
+private const val BASE_URL = "https://apimocha.com/examplestore/"
+    //"https://mocki.io"
     //for real device "http://192.168.29.10:3000"
    //for Emulator "http://10.0.2.2:3000"
     //"http://localhost:3000"
@@ -33,8 +34,8 @@ private val retrofit = Retrofit.Builder()
  */
 interface ProductApiService{
 
-    //@GET("products")
-    @GET("v1/dd52b3cd-408c-4bbe-bfdf-31644f543c3c")
+    @GET("products")
+   // @GET("v1/dd52b3cd-408c-4bbe-bfdf-31644f543c3c")
     suspend fun getProducts() : List<Product>
 }
 

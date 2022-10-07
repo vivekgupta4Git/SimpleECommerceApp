@@ -4,6 +4,8 @@ import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.widget.addTextChangedListener
+import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -29,15 +31,36 @@ class ProductsAdapter(private val onClickListener: OnClickListener) : ListAdapte
                             placeholder(R.drawable.ic_launcher_foreground)
                             transformations(CircleCropTransformation())
                         }
-
+                        binding.quantityEditTv.setText("1")
                         binding.productNameTv.text = pr.title
                         binding.ratingBar.rating = pr.rating
                         binding.discountTv.text = binding.root.context.getString(R.string.product_discount,pr.discountPercentage.toString())
                         binding.productPriceTv.text = binding.root.context.getString(R.string.product_rate,pr.price.toString())
+
                         binding.buyButton.setOnClickListener {
-                            clickListener.onProductClick(pr)
-                            binding.buyButton.isEnabled = false
+                            val qty =   binding.quantityEditTv.text.toString().toInt()
+                            clickListener.onProductClick(pr,qty)
                         }
+
+                        binding.addButton.setOnClickListener {
+                            var q = binding.quantityEditTv.text.toString().toInt()
+                            q += 1
+                            if(q < pr.stock)
+                                binding.quantityEditTv.setText(q.toString())
+                            else
+                                binding.quantityEditTv.setText(pr.stock.toString())
+                        }
+
+                        binding.removeButton.setOnClickListener {
+                            var q = binding.quantityEditTv.text.toString().toInt()
+                            q -= 1
+                            if(q > 0)
+                            binding.quantityEditTv.setText(q.toString())
+                            else
+                                binding.quantityEditTv.setText("1")
+                        }
+
+
                 }
                 companion object{
                     fun from(parent : ViewGroup,clickListener: OnClickListener) : MyViewHolder{
@@ -64,72 +87,16 @@ class ProductsAdapter(private val onClickListener: OnClickListener) : ListAdapte
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val pr = getItem(position)
-        holder.itemView.setOnClickListener {
-            onClickListener.onProductClick(pr)
-        }
         holder.bind(pr)
     }
 
     interface OnClickListener{
-        fun onProductClick(pr : Product)
+        fun onProductClick(pr : Product,qytToAdd :Int)
     }
 
 }
 
 
-class SelectedProductsAdapter(private val onClickListener: OnClickListener) : ListAdapter<Product,
-        SelectedProductsAdapter.MyViewHolder>(DiffCallback) {
-
-    class MyViewHolder(private var binding: SelectedProductLayoutBinding,private val clickListener: OnClickListener): RecyclerView.ViewHolder(binding.root){
-        fun bind(pr : Product){
-            binding.productImageView.load(pr.thumbnail){
-                crossfade(true)
-                placeholder(R.drawable.ic_launcher_foreground)
-                transformations(CircleCropTransformation())
-            }
-            binding.productNameTv.text = pr.title
-            binding.ratingBar.rating = pr.rating
-            binding.productPriceTv.text = binding.root.context.getString(R.string.product_rate,pr.price.toString())
-            binding.buyButton.setOnClickListener {
-                clickListener.onProductClick(pr)
-            }
-        }
-        companion object{
-            fun from(parent : ViewGroup,clickListener: OnClickListener) : MyViewHolder{
-                val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = SelectedProductLayoutBinding.inflate(layoutInflater,parent,false)
-                return MyViewHolder(binding,clickListener)
-            }
-        }
-    }
-
-    object DiffCallback :DiffUtil.ItemCallback<Product>(){
-        override fun areItemsTheSame(oldItem: Product, newItem: Product): Boolean {
-            return oldItem === newItem
-        }
-
-        override fun areContentsTheSame(oldItem: Product, newItem: Product): Boolean {
-            return oldItem.id == newItem.id
-        }
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        return MyViewHolder.from(parent,onClickListener)
-    }
-
-    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        val pr = getItem(position)
-        holder.itemView.setOnClickListener {
-            onClickListener.onProductClick(pr)
-        }
-        holder.bind(pr)
-    }
-
-    interface OnClickListener{
-        fun onProductClick(pr : Product)
-    }
-
-}
 
 
 private fun readJsonFromFile(context: Context) : String{

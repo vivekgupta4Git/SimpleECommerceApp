@@ -55,6 +55,16 @@
                 app:layout_constraintEnd_toEndOf="parent" />
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/clearCart"
+                android:text="Clear Cart"
+                android:layout_marginStart="32dp"
+                android:layout_marginBottom="64dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/showDetailsButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -66,7 +76,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/selectedProductRecycler"
                 android:layout_width="0dp"
-                android:layout_height="200dp"
+                android:layout_height="250dp"
                 android:visibility="invisible"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintEnd_toEndOf="parent"
