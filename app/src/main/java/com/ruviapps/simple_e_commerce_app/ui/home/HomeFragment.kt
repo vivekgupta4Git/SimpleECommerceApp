@@ -35,9 +35,10 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        homeViewModel.getStoreName()
         homeViewModel.storeInfo.observe(viewLifecycleOwner){
-           binding.storeName.text = it[0].store
+           Log.d("myTag","Store Info = $it")
+            binding.storeName.text = it[0].store
         }
 
 
