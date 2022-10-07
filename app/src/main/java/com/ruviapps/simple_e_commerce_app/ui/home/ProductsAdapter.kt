@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import coil.transform.CircleCropTransformation
 import com.ruviapps.simple_e_commerce_app.R
+import com.ruviapps.simple_e_commerce_app.databinding.SelectedProductLayoutBinding
 import com.ruviapps.simple_e_commerce_app.databinding.SingleProductLayoutBinding
 import com.ruviapps.simple_e_commerce_app.model.Product
 import org.json.JSONArray
@@ -35,6 +36,7 @@ class ProductsAdapter(private val onClickListener: OnClickListener) : ListAdapte
                         binding.productPriceTv.text = binding.root.context.getString(R.string.product_rate,pr.price.toString())
                         binding.buyButton.setOnClickListener {
                             clickListener.onProductClick(pr)
+                            binding.buyButton.isEnabled = false
                         }
                 }
                 companion object{
@@ -58,6 +60,61 @@ class ProductsAdapter(private val onClickListener: OnClickListener) : ListAdapte
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
        return MyViewHolder.from(parent,onClickListener)
+    }
+
+    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        val pr = getItem(position)
+        holder.itemView.setOnClickListener {
+            onClickListener.onProductClick(pr)
+        }
+        holder.bind(pr)
+    }
+
+    interface OnClickListener{
+        fun onProductClick(pr : Product)
+    }
+
+}
+
+
+class SelectedProductsAdapter(private val onClickListener: OnClickListener) : ListAdapter<Product,
+        SelectedProductsAdapter.MyViewHolder>(DiffCallback) {
+
+    class MyViewHolder(private var binding: SelectedProductLayoutBinding,private val clickListener: OnClickListener): RecyclerView.ViewHolder(binding.root){
+        fun bind(pr : Product){
+            binding.productImageView.load(pr.thumbnail){
+                crossfade(true)
+                placeholder(R.drawable.ic_launcher_foreground)
+                transformations(CircleCropTransformation())
+            }
+            binding.productNameTv.text = pr.title
+            binding.ratingBar.rating = pr.rating
+            binding.productPriceTv.text = binding.root.context.getString(R.string.product_rate,pr.price.toString())
+            binding.buyButton.setOnClickListener {
+                clickListener.onProductClick(pr)
+            }
+        }
+        companion object{
+            fun from(parent : ViewGroup,clickListener: OnClickListener) : MyViewHolder{
+                val layoutInflater = LayoutInflater.from(parent.context)
+                val binding = SelectedProductLayoutBinding.inflate(layoutInflater,parent,false)
+                return MyViewHolder(binding,clickListener)
+            }
+        }
+    }
+
+    object DiffCallback :DiffUtil.ItemCallback<Product>(){
+        override fun areItemsTheSame(oldItem: Product, newItem: Product): Boolean {
+            return oldItem === newItem
+        }
+
+        override fun areContentsTheSame(oldItem: Product, newItem: Product): Boolean {
+            return oldItem.id == newItem.id
+        }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+        return MyViewHolder.from(parent,onClickListener)
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
@@ -127,7 +184,7 @@ fun createProductListFromJson(context: Context) : List<Product>{
         }
     }catch (ex : Exception)
     {
-        //Log.d("myTag","Error ${ex.localizedMessage}")
+        ex.printStackTrace()
     }
     return mutableList
 }

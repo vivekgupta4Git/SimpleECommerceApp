@@ -1,6 +1,7 @@
 package com.ruviapps.simple_e_commerce_app.ui.home
 
 import android.net.Network
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -19,17 +20,21 @@ enum class NetworkStatus{
 
 class HomeViewModel : ViewModel() {
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is home Fragment"
+    private val _selectedProducts = MutableLiveData<List<Product>>().apply {
+    value =  mutableListOf()
     }
-    val text: LiveData<String> = _text
-
+    val selectedProducts : LiveData<List<Product>> get() = _selectedProducts
 
     private val _status = MutableLiveData<NetworkStatus>()
     val status : LiveData<NetworkStatus> get() = _status
 
     private val _products = MutableLiveData<List<Product>>()
     val products : LiveData<List<Product>> get() = _products
+
+    private val _totalAmount = MutableLiveData<Int>().apply {
+        value = 0
+    }
+    val totalAmount : LiveData<Int> get() = _totalAmount
 
     init {
         getProductsList()
@@ -48,4 +53,38 @@ class HomeViewModel : ViewModel() {
         }
     }
 
+    private var productList = mutableListOf<Product>()
+
+    fun addProductToCart(product: Product){
+        productList.add(product)
+        _selectedProducts.value = productList
+        getCartAmount()
+    }
+
+    fun removeProductFromCart(product: Product){
+        productList.contains(product).let {
+            if(it){
+                productList.remove(product)
+                _selectedProducts.value = productList
+            }
+        }
+        getCartAmount()
+    }
+
+
+
+    private fun getCartAmount() {
+        var total = 0
+        productList.forEach {
+            total +=it.price
+        }
+        _totalAmount.value = total
+    }
+
+    fun clearCart()
+    {
+        productList = mutableListOf()
+        _totalAmount.value = 0
+        _selectedProducts.value = productList
+    }
 }

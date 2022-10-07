@@ -5,4 +5,9 @@
     <string name="title_notifications">Notifications</string>
     <string name="product_rate">Rs. %1$s</string>
     <string name="product_discount"> %1$s %%</string>
+    <string name="total_amount">Total Cart Value is Rs. %1$s</string>
+    <string name="hide_details">Hide Order Details</string>
+    <string name="show_details">Show Order Details</string>
+    <string name="checkout_text">Checkout</string>
+    <string name="go_to_cart">Go To Cart</string>
 </resources>

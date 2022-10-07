@@ -5,17 +5,18 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
+import com.ruviapps.simple_e_commerce_app.R
 import com.ruviapps.simple_e_commerce_app.databinding.FragmentHomeBinding
 import com.ruviapps.simple_e_commerce_app.model.Product
 
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
-    private lateinit var homeViewModel: HomeViewModel
+    private val homeViewModel : HomeViewModel by activityViewModels()
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
@@ -25,35 +26,31 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        homeViewModel =
-            ViewModelProvider(this).get(HomeViewModel::class.java)
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-
-        val textView: TextView = binding.textHome
-        homeViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
-        return root
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.textHome.setOnClickListener {
+            findNavController().navigate(R.id.action_navigation_home_to_navigation_notifications)
+        }
         val adapter = ProductsAdapter(object : ProductsAdapter.OnClickListener{
             override fun onProductClick(pr: Product) {
-                Toast.makeText(requireContext(),"Product id : ${pr.id}",Toast.LENGTH_SHORT).show()
+                homeViewModel.addProductToCart(pr)
+                Toast.makeText(requireContext(),"Product Added to the cart",Toast.LENGTH_SHORT).show()
             }
 
         })
-       /* val list = createProductListFromJson(requireContext())
-        adapter.submitList(list)
-*/
+        val list = createProductListFromJson(requireContext())
+        Log.d("myTag","Parsing manually then the List is \n $list")
+           // adapter.submitList(list)
+
         val recyclerView = binding.recyclerView
 
     homeViewModel.products.observe(viewLifecycleOwner){
-            Log.d("myTag","List of Products is $it")
             adapter.submitList(it)
             recyclerView.adapter = adapter
         }
