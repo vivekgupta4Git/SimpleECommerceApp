@@ -1,6 +1,7 @@
 package com.ruviapps.simple_e_commerce_app.ui.home
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -8,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ruviapps.simple_e_commerce_app.model.Product
 import com.ruviapps.simple_e_commerce_app.model.SelectedProduct
+import com.ruviapps.simple_e_commerce_app.model.toSelectedProduct
 import com.ruviapps.simple_e_commerce_app.network.ProductApi
 import kotlinx.coroutines.launch
 
@@ -55,7 +57,13 @@ class HomeViewModel : ViewModel() {
     }
     val selectedHashMapList: LiveData<HashMap<Product, Int>> get() = _selectedHashMapList
 
-
+    fun getSelectedItemList(): List<SelectedProduct> {
+        val list = mutableListOf<SelectedProduct>()
+        selectedHashMapList.value?.forEach { (t, u )->
+            t.toSelectedProduct(u)
+        }
+        return list
+    }
 
 
     fun addProductToCart(product: Product, qty: Int) {
@@ -99,4 +107,22 @@ class HomeViewModel : ViewModel() {
         _totalAmount.value = 0
         _selectedHashMapList.value = hashMap
     }
+
+
+    fun checkOutOrder(list : List<SelectedProduct>){
+        viewModelScope.launch {
+            _status.value = NetworkStatus.LOADING
+            try {
+                ProductApi.retrofitService.checkOutOrder(list)
+                _status.value = NetworkStatus.DONE
+                clearCart()
+
+            } catch (ex: Exception) {
+                ex.printStackTrace()
+                _status.value = NetworkStatus.ERROR
+            }
+
+        }
+    }
+
 }

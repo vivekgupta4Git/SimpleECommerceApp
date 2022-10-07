@@ -12,4 +12,6 @@
     <string name="checkout_text">Checkout</string>
     <string name="go_to_cart">Go To Cart</string>
     <string name="add_to_cart">Add to Cart</string>
+    <string name="no_product_warning">Please add Product to Cart before checking out</string>
+    <string name="missing_address_warning">We need your address before shipping products</string>
 </resources>

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -17,10 +18,13 @@ import com.ruviapps.simple_e_commerce_app.databinding.FragmentNotificationsBindi
 import com.ruviapps.simple_e_commerce_app.databinding.SelectedProductLayoutBinding
 import com.ruviapps.simple_e_commerce_app.model.SelectedProduct
 import com.ruviapps.simple_e_commerce_app.model.toDomainProduct
+import com.ruviapps.simple_e_commerce_app.model.toSelectedProduct
 import com.ruviapps.simple_e_commerce_app.ui.home.HomeViewModel
+import com.ruviapps.simple_e_commerce_app.ui.home.NetworkStatus
 
 class NotificationsFragment : Fragment() {
 
+    private var checkOutList = mutableListOf<SelectedProduct>()
     private var _binding: FragmentNotificationsBinding? = null
 
     // This property is only valid between onCreateView and
@@ -69,17 +73,66 @@ class NotificationsFragment : Fragment() {
         homeViewModel.selectedHashMapList.observe(viewLifecycleOwner){
            val list = mutableListOf<SelectedProduct>()
             it.forEach { (p, q) ->
-                list.add(SelectedProduct(p.id,p.title,p.description,p.price,p.discountPercentage,p.rating,p.stock,p.brand,p.category,p.thumbnail
-                ,q))
+                list.add(p.toSelectedProduct(q))
+            /* list.add(SelectedProduct(p.id,p.title,p.description,p.price,p.discountPercentage,p.rating,p.stock,p.brand,p.category,p.thumbnail
+                ,q))*/
             }
             adapter.submitList( list)
+            checkOutList = list
             binding.selectedProductRecycler.adapter = adapter
         }
 
         homeViewModel.totalAmount.observe(viewLifecycleOwner){
             binding.textNotifications.text = getString(R.string.total_amount,it.toString())
         }
+
+
+
+        val noItemToast =Toast.makeText(requireContext(),getString(R.string.no_product_warning),Toast.LENGTH_SHORT)
+        val noAddressToast = Toast.makeText(requireContext(),getString(R.string.missing_address_warning),Toast.LENGTH_SHORT)
+
+        binding.checkoutButton.setOnClickListener {
+            val itemCount = binding.selectedProductRecycler.adapter?.itemCount ?: 0
+            if(itemCount == 0){
+                noItemToast.cancel()
+                noItemToast.show()
+                return@setOnClickListener
+            }else  if(binding.addressField.text.isNullOrEmpty()){
+                noAddressToast.cancel()
+                noAddressToast.show()
+                return@setOnClickListener
+            }
+
+            homeViewModel.checkOutOrder(checkOutList)
+
+            homeViewModel.status.observe(viewLifecycleOwner){
+                when(it){
+                    NetworkStatus.DONE -> {
+                        Toast.makeText(requireContext(),"Uploaded Successfully",Toast.LENGTH_SHORT).show()
+                        binding.progressBar.visibility = View.GONE
+                    }
+                    NetworkStatus.ERROR ->{
+                        Toast.makeText(requireContext(),"Error Occurred while Uploading ",Toast.LENGTH_SHORT).show()
+                        binding.progressBar.visibility = View.GONE
+                    }
+                     NetworkStatus.LOADING ->{
+                            binding.progressBar.visibility = View.VISIBLE
+                     }
+                    else ->
+                    {
+                        Toast.makeText(requireContext(),"Something Went Wrong ! Contact Developer Asap",Toast.LENGTH_SHORT).show()
+                        binding.progressBar.visibility = View.GONE
+
+                    }
+                }
+            }
+
+        }
+
+
     }
+
+
 
     override fun onDestroyView() {
         super.onDestroyView()

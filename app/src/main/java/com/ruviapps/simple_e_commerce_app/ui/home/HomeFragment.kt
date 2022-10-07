@@ -39,10 +39,12 @@ class HomeFragment : Fragment() {
         binding.textHome.setOnClickListener {
             findNavController().navigate(R.id.action_navigation_home_to_navigation_notifications)
         }
+        val toast =  Toast.makeText(requireContext(),"Product Added to the cart",Toast.LENGTH_SHORT)
         val adapter = ProductsAdapter(object : ProductsAdapter.OnClickListener{
             override fun onProductClick(pr: Product, qytToAdd : Int) {
                 homeViewModel.addProductToCart(pr,qytToAdd)
-                Toast.makeText(requireContext(),"Product Added to the cart",Toast.LENGTH_SHORT).show()
+                toast.cancel()
+                toast.show()
             }
 
         })

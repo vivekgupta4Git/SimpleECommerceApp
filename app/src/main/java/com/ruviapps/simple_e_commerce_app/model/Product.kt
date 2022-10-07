@@ -17,7 +17,11 @@ data class Product(
     val thumbnail : String?
 ) : Parcelable
 
+fun Product.toSelectedProduct(qty : Int): SelectedProduct{
+    return SelectedProduct(id,title,description,price,discountPercentage,rating,stock,brand,category,thumbnail,qty)
+}
 
+@Parcelize
 data class SelectedProduct(
     val id : Int,
     val title : String?,
@@ -30,7 +34,7 @@ data class SelectedProduct(
     val category: String?,
     val thumbnail : String?,
     val cartQyt : Int
-)
+) : Parcelable
 
 /*
 Extension function to convert selectedProduct to Domain Product
