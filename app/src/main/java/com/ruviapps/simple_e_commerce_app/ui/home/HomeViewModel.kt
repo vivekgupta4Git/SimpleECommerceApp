@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ruviapps.simple_e_commerce_app.model.Product
 import com.ruviapps.simple_e_commerce_app.model.SelectedProduct
+import com.ruviapps.simple_e_commerce_app.model.StoreInfo
 import com.ruviapps.simple_e_commerce_app.model.toSelectedProduct
 import com.ruviapps.simple_e_commerce_app.network.ProductApi
 import kotlinx.coroutines.launch
@@ -122,6 +123,19 @@ class HomeViewModel : ViewModel() {
                 _status.value = NetworkStatus.ERROR
             }
 
+        }
+    }
+
+    private var _storeInfo = MutableLiveData<List<StoreInfo>>()
+    val storeInfo : LiveData<List<StoreInfo>> get() = _storeInfo
+
+    fun getStoreName(){
+        viewModelScope.launch {
+            try {
+                _storeInfo.value  = ProductApi.retrofitService.getStoreInfo()
+            }catch (ex : Exception){
+                ex.printStackTrace()
+            }
         }
     }
 

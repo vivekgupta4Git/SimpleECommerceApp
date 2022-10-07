@@ -42,3 +42,9 @@ Extension function to convert selectedProduct to Domain Product
 fun SelectedProduct.toDomainProduct() : Product{
     return Product(id, title, description, price, discountPercentage, rating, stock, brand, category, thumbnail)
 }
+
+
+@Parcelize
+data class StoreInfo(
+    val store : String?
+): Parcelable

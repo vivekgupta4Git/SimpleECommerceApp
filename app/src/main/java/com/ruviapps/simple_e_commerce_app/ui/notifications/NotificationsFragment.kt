@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -110,6 +111,7 @@ class NotificationsFragment : Fragment() {
                     NetworkStatus.DONE -> {
                         Toast.makeText(requireContext(),"Uploaded Successfully",Toast.LENGTH_SHORT).show()
                         binding.progressBar.visibility = View.GONE
+                        findNavController().navigate(R.id.action_navigation_notifications_to_navigation_dashboard)
                     }
                     NetworkStatus.ERROR ->{
                         Toast.makeText(requireContext(),"Error Occurred while Uploading ",Toast.LENGTH_SHORT).show()

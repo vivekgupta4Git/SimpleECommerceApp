@@ -2,6 +2,7 @@ package com.ruviapps.simple_e_commerce_app.network
 
 import com.ruviapps.simple_e_commerce_app.model.Product
 import com.ruviapps.simple_e_commerce_app.model.SelectedProduct
+import com.ruviapps.simple_e_commerce_app.model.StoreInfo
 import com.ruviapps.simple_e_commerce_app.ui.home.NetworkStatus
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -56,6 +57,9 @@ interface ProductApiService{
 
     @POST("orderDone")
     suspend fun checkOutOrder(@Body products: List<SelectedProduct>)
+
+    @GET("storeInfo")
+    suspend fun getStoreInfo() : List<StoreInfo>
 }
 
 /**

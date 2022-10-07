@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.ruviapps.simple_e_commerce_app.MainActivity
 import com.ruviapps.simple_e_commerce_app.R
 import com.ruviapps.simple_e_commerce_app.databinding.FragmentHomeBinding
 import com.ruviapps.simple_e_commerce_app.model.Product
@@ -35,16 +36,20 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        homeViewModel.storeInfo.observe(viewLifecycleOwner){
+           binding.storeName.text = it[0].store
+        }
+
 
         binding.textHome.setOnClickListener {
             findNavController().navigate(R.id.action_navigation_home_to_navigation_notifications)
         }
-        val toast =  Toast.makeText(requireContext(),"Product Added to the cart",Toast.LENGTH_SHORT)
+
+
         val adapter = ProductsAdapter(object : ProductsAdapter.OnClickListener{
             override fun onProductClick(pr: Product, qytToAdd : Int) {
                 homeViewModel.addProductToCart(pr,qytToAdd)
-                toast.cancel()
-                toast.show()
+                Toast.makeText(requireContext(),getString(R.string.cart_addition_confirm_message,qytToAdd),Toast.LENGTH_SHORT).show()
             }
 
         })
