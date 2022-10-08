@@ -37,10 +37,29 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         homeViewModel.getStoreName()
         homeViewModel.storeInfo.observe(viewLifecycleOwner){
-           Log.d("myTag","Store Info = $it")
             binding.storeName.text = it[0].store
         }
 
+        homeViewModel.status.observe(viewLifecycleOwner){
+            when(it){
+            NetworkStatus.LOADING ->
+            {binding.progressBar.visibility = View.VISIBLE
+                binding.errorView.visibility = View.GONE
+
+            }
+            NetworkStatus.DONE -> {
+                binding.progressBar.visibility = View.GONE
+                binding.errorView.visibility = View.GONE
+            }
+                else -> {
+                    binding.progressBar.visibility = View.GONE
+                    binding.errorView.text = getString(R.string.error_text)
+                    binding.errorView.visibility = View.VISIBLE
+                }
+
+            }
+
+        }
 
         binding.textHome.setOnClickListener {
             findNavController().navigate(R.id.action_navigation_home_to_navigation_notifications)

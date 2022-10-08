@@ -15,4 +15,5 @@
     <string name="no_product_warning">Please add Product to Cart before checking out</string>
     <string name="missing_address_warning">We need your address before shipping products</string>
     <string name="cart_addition_confirm_message">Product Added to the cart Quantity Added = %1$d</string>
+    <string name="error_text">Something went wrong !</string>
 </resources>
